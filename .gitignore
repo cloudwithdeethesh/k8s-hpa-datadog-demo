@@ -5,4 +5,4 @@ __pycache__/
 .DS_Store
 
 # Do not commit real secrets
-datadog-values.yaml
+#datadog-values.yaml

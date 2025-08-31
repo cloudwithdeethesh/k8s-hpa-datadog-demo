@@ -1,0 +1,27 @@
+datadog:
+  site: "datadoghq.com"
+  apiKey: ************
+  appKeyExistingSecret: null
+  appKey: ************
+  apiKeyExistingSecret: null
+  kubelet:
+    host:
+      valueFrom:
+        fieldRef:
+          fieldPath: status.hostIP
+    hostCAPath: null
+    tlsVerify: false
+  tags:
+    - "env:devopsdev"
+  apm:
+    portEnabled: true    helm list
+clusterAgent:
+  enabled: true
+  metricsProvider:
+    enabled: true
+    useDatadogMetrics: true
+providers:
+  aks:
+    enabled: true
+  admissionController:
+    enabled: false
