@@ -1,4 +1,4 @@
-# Kubernetes HPA with Datadog External Metrics — Calculator Demo
+# Kubernetes HPA with Datadog External Metrics - Calculator Demo
 
 A **Flask calculator app** instrumented with **Datadog APM** and scaled with Kubernetes **Horizontal Pod Autoscaler (HPA)** using **external metrics** from the Datadog Cluster Agent.
 
