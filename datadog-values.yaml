@@ -15,11 +15,17 @@ datadog:
     - "env:devopsdev"
   apm:
     portEnabled: true    helm list
+
+# -----------------------------------------------------------------------------
+# Cluster Agent configuration
+# -----------------------------------------------------------------------------
 clusterAgent:
-  enabled: true
+  enabled: true  # (MANDATORY) Set to true to deploy the Datadog Cluster Agent.
   metricsProvider:
-    enabled: true
-    useDatadogMetrics: true
+    enabled: true  # (MANDATORY) Enables the external metrics provider for HPA and custom metrics.
+    useDatadogMetrics: true  # (MANDATORY) Use DatadogMetrics CRD for advanced metric routing.
+  # Optionally, you can configure additional features such as admission controller, cluster checks, etc.
+
 providers:
   aks:
     enabled: true
