@@ -19,7 +19,7 @@ You can either **use the prebuilt image** for a fast deploy, or **build your own
 
 ---
 
-### 0) Prereqs & Base Setup
+### 1) Prereqs & Base Setup
 - Namespace: this repo uses **`app-ns`**.
 - Datadog: Cluster Agent with **External Metrics** enabled (and APM if you want traces).
 - **DD APM annotations/env**: ensure your Deployment has Datadog log/trace annotations and env vars.
@@ -35,7 +35,7 @@ You can either **use the prebuilt image** for a fast deploy, or **build your own
 
 ---
 
-### 1A) Quick Deploy (prebuilt image)
+### 2) Quick Deploy (prebuilt image)
 Deploy using the published image: **`cloudwithdeethesh/calculator-app:v4`**
 
 ```bash
@@ -54,7 +54,7 @@ kubectl apply -f k8s/hpa.yaml
 
 ---
 
-### 1B) Build Your Own Image
+### 3) Build Your Own Image
 If you want to bake in code changes:
 
 ```bash
@@ -67,7 +67,7 @@ kubectl apply -f k8s/deployment.yaml
 
 ---
 
-### 2) Deploy Datadog Metric CRD
+### 4) Deploy Datadog Metric CRD
 > Note: the **DatadogMetric CRD** is installed with the Datadog Cluster Agent.  
 This repo includes a sample metric mapping for HPA.
 
@@ -82,7 +82,7 @@ sum:trace.flask.request.hits{env:mycalc,service:calculator-app}.as_rate().rollup
 
 ---
 
-### 3) Deploy HPA (External Metrics)
+### 5) Deploy HPA (External Metrics)
 Review `k8s/hpa.yaml`:
 - `metric.name: datadogmetric@app-ns:calculator-latency-metrics`
 - `target.averageValue: "200m"`
@@ -94,7 +94,7 @@ kubectl apply -f k8s/hpa.yaml
 
 ---
 
-### 4) Verify Setup
+### 6) Verify Setup
 ```bash
 # External metrics API should list your metric
 kubectl get --raw "/apis/external.metrics.k8s.io/v1beta1" | jq '.'
@@ -109,7 +109,7 @@ kubectl -n app-ns port-forward svc/calculator-app 8000:8000
 
 ---
 
-### 5) Load Testing with k6
+### 7) Load Testing with k6
 A minimal k6 script is included at `ops/loadtest.js`.
 
 ```bash
