@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculator-app
+  namespace: app-ns
+  labels:
+    app: calculator-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calculator-app
+  template:
+    metadata:
+      labels:
+        app: calculator-app
+      annotations:
+        ad.datadoghq.com/calculator-app.logs: '[{"source": "python", "service": "calculator-app"}]'
+        tags.datadoghq.com/service: "calculator-app"
+    spec:
+      containers:
+        - name: calculator-app
+          image: cloudwithdeethesh/calculator-app:v4
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DD_AGENT_HOST
+              value: "datadog-agent.datadog-monitoring.svc.cluster.local"
+            # - name: DD_AGENT_HOST
+            #   valueFrom:
+            #     fieldRef:
+            #       fieldPath: status.hostIP
+            - name: DD_ENV
+              value: "mycalc"
+            - name: DD_APM_ENABLED
+              value: "true"
+            - name: DD_SITE
+              value: "datadoghq.com"
+            - name: DD_SERVICE
+              value: "calculator-app"
+            - name: DD_VERSION
+              value: "1.0"
+            - name: DD_LOGS_INJECTION
+              value: "true"
+            - name: DD_TRACE_SAMPLE_RATE
+              value: "1"
+            - name: DD_PROFILING_ENABLED
+              value: "true"
+            - name: DD_TRACE_DEBUG
+              value: "true"
+            - name: DD_TRACE_STARTUP_LOGS
+              value: "true"
+            - name: DD_TRACE_AGENT_PORT
+              value: "8126"
+            - name: DD_RUNTIME_METRICS_ENABLED
+              value: "true"
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: calculator-app
+  namespace: app-ns
+spec:
+  selector:
+    app: calculator-app
+  ports:
+    - port: 8000

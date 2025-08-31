@@ -1,0 +1,10 @@
+apiVersion: datadoghq.com/v1alpha1
+kind: DatadogMetric
+metadata:
+  name: calculator-latency-metrics
+  namespace: app-ns
+  annotations:
+    external-metrics.datadoghq.com/always-active: "true"
+spec:
+  # This is the ONLY query that should be here
+  query: "sum:trace.flask.request.hits{env:mycalc,service:calculator-app}.as_rate().rollup(10).fill(0)"

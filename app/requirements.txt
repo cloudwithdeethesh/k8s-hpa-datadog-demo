@@ -1,0 +1,10 @@
+Flask==1.1.2
+Flask-SQLAlchemy==2.5.1
+Werkzeug==1.0.1
+Jinja2==2.11.3
+itsdangerous==1.1.0
+MarkupSafe==1.1.1
+SQLAlchemy==1.4.46
+click==7.1.2
+ddtrace==1.5.2
+requests==2.31.0

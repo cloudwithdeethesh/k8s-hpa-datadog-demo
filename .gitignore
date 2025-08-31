@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+.vscode/
+.DS_Store
+
+# Do not commit real secrets
+datadog-values.yaml

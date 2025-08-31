@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Calculator App</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .result {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1>Calculator</h1>
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Enter Numbers</h5>
+              <div class="mb-3">
+                <label for="x" class="form-label">First Number (x)</label>
+                <input type="number" class="form-control" id="x" value="10" />
+              </div>
+              <div class="mb-3">
+                <label for="y" class="form-label">Second Number (y)</label>
+                <input type="number" class="form-control" id="y" value="5" />
+              </div>
+              <div class="d-grid gap-2">
+                <button onclick="calculate('add')" class="btn btn-primary">
+                  Add
+                </button>
+                <button onclick="calculate('subtract')" class="btn btn-primary">
+                  Subtract
+                </button>
+                <button onclick="calculate('multiply')" class="btn btn-primary">
+                  Multiply
+                </button>
+                <button onclick="calculate('divide')" class="btn btn-primary">
+                  Divide
+                </button>
+                <button
+                  onclick="calculate('calculate')"
+                  class="btn btn-success"
+                >
+                  Complex Calculation
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Result</h5>
+              <div id="result"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function calculate(operation) {
+        const x = parseFloat(document.getElementById("x").value);
+        const y = parseFloat(document.getElementById("y").value);
+
+        fetch(`/${operation}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ x, y }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const resultDiv = document.getElementById("result");
+            if (data.error) {
+              resultDiv.innerHTML = `<div class="result error">${data.error}</div>`;
+            } else if (data.steps) {
+              // Complex calculation result
+              resultDiv.innerHTML = 
+                `<div class="result success">
+                    <h6>Steps:</h6>
+                    <p>Add: ${data.steps.add}</p>
+                    <p>Multiply: ${data.steps.multiply}</p>
+                    <p>Subtract: ${data.steps.subtract}</p>
+                    <p>Final Result: ${data.steps.final}</p>
+                </div>`;
+            } else {
+              resultDiv.innerHTML = 
+                `<div class="result success">
+                    <p>Operation: ${data.operation}</p>
+                    <p>Result: ${data.result}</p>
+                </div>`;
+            }
+          })
+          .catch((error) => {
+            document.getElementById("result").innerHTML = 
+              `<div class="result error">
+                  Error: ${error.message}
+              </div>`;
+          });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: calculator-app-hpa
+  namespace: app-ns
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: calculator-app
+  minReplicas: 1
+  maxReplicas: 20
+  metrics:
+    - type: External
+      external:
+        metric:
+          name: datadogmetric@app-ns:calculator-latency-metrics
+          #name: nginx-cpu-metric
+        target:
+          type: AverageValue
+          averageValue: "200m" # target value of the metric of 5 RPS
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 0    # Wait 1 minute before scaling down
+      policies:
+        - type: Percent
+          value: 100                   # Only scale down 50% at a time
+          periodSeconds: 10            # Check every 30 seconds
+    scaleUp:
+      stabilizationWindowSeconds: 0    # Immediate scale up
+      policies:
+        - type: Percent
+          value: 100                   # Scale up by 100% at a time
+          periodSeconds: 15            # Check every 30 seconds
